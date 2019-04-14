@@ -28,7 +28,11 @@ def add_item(lst, redirects, index_map, item):
     k = item[SLICE]
     lst.append(index_map.setdefault(redirects.get(k, k), len(index_map)))
 
+redirects_filename = './redirects_en.nt.bz2'
+page_links_filename = './page_links_en.nt.bz2'
 limit=119077682 #5000000
+DBPEDIA_RESOURCE_PREFIX_LEN = len("http://dbpedia.org/resource/")
+SLICE = slice(DBPEDIA_RESOURCE_PREFIX_LEN + 1, -1)
 redirects = get_redirects(redirects_filename)
 
 index_map = dict() # links->IDs
@@ -46,4 +50,4 @@ X = X.tocsr()
 del(data,destination, source)
 print(X.shape)
 print('saving data')
-scipy.io.savemat('./', mdict={'redirects':X})
+scipy.io.savemat('./processed_data.mat', mdict={'data':X})
