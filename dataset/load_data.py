@@ -6,6 +6,7 @@ from time import time
 from tqdm import tqdm_notebook
 from scipy import sparse
 import scipy.io
+import scipy
 def get_lines(filename): 
 	return (line.split() for line in BZ2File(filename))
 
@@ -44,6 +45,7 @@ for l, split in tqdm_notebook(enumerate(lines), total=limit):
     add_item(destination, redirects, index_map, split[2])
     data.append(1)
 
+n=len(data)
 X = sparse.coo_matrix((data, (destination,source)), shape=(n,n), dtype=np.float32)
 X = X.tocsr()
 
