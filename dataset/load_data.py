@@ -7,6 +7,10 @@ from tqdm import tqdm_notebook
 from scipy import sparse
 import scipy.io
 import scipy
+
+DBPEDIA_RESOURCE_PREFIX_LEN = len("http://dbpedia.org/resource/")
+SLICE = slice(DBPEDIA_RESOURCE_PREFIX_LEN + 1, -1)
+
 def get_lines(filename): 
 	return (line.split() for line in BZ2File(filename))
 
@@ -31,9 +35,9 @@ def add_item(lst, redirects, index_map, item):
 
 redirects_filename = './redirects_en.nt.bz2'
 page_links_filename = './page_links_en.nt.bz2'
+
 limit=119077682 #5000000
-DBPEDIA_RESOURCE_PREFIX_LEN = len("http://dbpedia.org/resource/")
-SLICE = slice(DBPEDIA_RESOURCE_PREFIX_LEN + 1, -1)
+
 redirects = get_redirects(redirects_filename)
 
 index_map = dict() # links->IDs
