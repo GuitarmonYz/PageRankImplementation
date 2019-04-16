@@ -1,25 +1,36 @@
+% CSE6643 PAGE RANK PROJECT
+% Arthur: Xiyu Ouyang, Yan Zhao, Jiawei Zhu
+% College of Computing
+% Department of Computational Science and Engineering
+% Georgia Institute of Technology
+% 2019/4/16
+
 clear all;
 close all;
 clc;
 
-%% Initial Set Up
+%% Initial Set Up of small dataset for testing algorithm only
 I = [2 3 1 3 4 4 1];
 J = [1 1 2 2 2 3 4];
 
-% Create the Adjacency matrix/Connectivity matrix from I,J
-H = full(sparse(I,J,1,4,4));
+% % Create the Adjacency matrix/Connectivity matrix from I,J
+% H = full(sparse(I,J,1,4,4));
+rowNumber = 20;
+H = createSparse(rowNumber, 0.1);
 
 % Plot the directed graph
-G = digraph(H'); 
+% names = {'vertex1', 'vertex2', ...
+%          'vertex3', 'vertex4'};
+% G = digraph(H',names);
+G = digraph(H');
 % plot(G); 
-
-% calculate in-degree and out-degree
+% 
+% % calculate in-degree and out-degree
 r = sum(H,2);  % out-degree, sum of each row
 c = sum(H,1);  % in-degree, sum of each column
 % 
-% % create the scaled matrix Ht
+% % % create the scaled matrix Ht
 Ht = H*diag(1./c);
-% pr =  centrality(G,'pagerank','FollowProbability',0.85);
 
 %% Method 1
 % Find the PageRank vector 
@@ -36,16 +47,17 @@ Ht = H*diag(1./c);
 % Using Google Matrix by Iteration
 
 % alpha = 0.85;
-% e = ones(4,1);
-% v = e/4;
+% e = ones(rowNumber,1);
+% v = e/rowNumber;
 % Ga = alpha*Ht+(1-alpha)*v*e';
-% p = rand(4,1);  % random initial vector
+% p = rand(rowNumber,1);  % random initial vector
 % p = p/sum(p);   % normalise p to have unit sum
-% for k=1:10      % only a few iterations are needed to create the same ranking
+% iterNumber = 100;
+% for k=1:iterNumber      % only a few iterations are needed to create the same ranking
 %     p = Ga*p;
 % end
 % [newp,rank] = sort(p,'descend'); % sort in descending order
-
+% 
 
 %% Method 3
 % Find the PageRank Vector 
@@ -53,30 +65,32 @@ Ht = H*diag(1./c);
 [m, n] = size(Ht);
 randomVector = rand(m,1);
 q1 = randomVector / norm(randomVector);
-arnoldiIter = 4;
+
+% Arnoldi Decomposition
+arnoldiIter = 100;
 [Q,H] = arnoldi(Ht,q1,arnoldiIter);
+
+% QR Algorithm
 qrIter = 100;
-Hcopy = H;
+[H_prime, Q_prime] = practical_qr(H, qrIter);
+V = mtimes(Q,Q_prime);
+D = diag(H_prime);
+p = V(:,1)/sum(V(:,1)); % normalised eigenvector as the PageRank vector
+[newp,rank] = sort(p,'descend'); % sort in descending ord
 
-% eps = 0.01;
-% for n = length(Hcopy):-1:2   
-%   % QR iteration
-%   while sum( abs(Hcopy(n,1:n-1)) ) > eps
-%     s = Hcopy(n,n);
-%     [Qcopy,R] = qr(Hcopy-s*eye(n));
-%     A = R*Qcopy + s*eye(n);V
-%   end 
-%   % Deflation
-%   Hcopy = Hcopy(1:n-1,1:n-1);
-% end
+%% Visuliaztion for Large Dataset
+% load processed_data.mat
+% G = data;
+% G = processed_data.mat;
+pr = centrality(G,'pagerank','MaxIterations',200,'FollowProbability',0.85);
+G.Nodes.PageRank = pr;
+G.Nodes.InDegree = indegree(G);
+G.Nodes.OutDegree = outdegree(G);
+G.Nodes(1:10,:); % View the Top 25 Resulting Scores
 
-for i=1:qrIter
-    [Qcopy,R] = qr(Hcopy);
-    Hcopy=R*Qcopy; 
-end
-
-[V1,D1] = eig(Hcopy);
-% p1 = V1(:,1)/sum(V1(:,1));         % normalised eigenvector as the PageRank vector
-% [newp1,rank1] = sort(p1,'descend'); % sort in descending ord
-
-
+% Extract and plot a subgraph containing all nodes whose score is greater than 0.005.
+% Color the graph nodes based on their PageRank score.
+vizGraph = subgraph(G,find(G.Nodes.PageRank > 0.005));
+plot(vizGraph,'NodeLabel',{},'NodeCData',vizGraph.Nodes.PageRank,'Layout','force');
+title('Visualization for Sparse Matrix')
+colorbar
