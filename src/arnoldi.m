@@ -1,12 +1,17 @@
+% CSE6643 PAGE RANK PROJECT
+% Arthur: Xiyu Ouyang, Yan Zhao, Jiawei Zhu
+% College of Computing
+% Department of Computational Science and Engineering
+% Georgia Institute of Technology
+% 2019/4/16
+
 function [Q,H] = arnoldi(A,q1,m)
-%ARNOLDI    Arnoldi iteration
+%   ARNOLDI    Arnoldi iteration
 %   [Q,H] = ARNOLDI(A,q1,M) carries out M iterations of the
 %   Arnoldi iteration with N-by-N matrix A and starting vector q1
-%   (which need not have unit 2-norm).  For M < N it produces
+%   (which is randomly generated).  For M < N it produces
 %   an N-by-(M+1) matrix Q with orthonormal columns and an
-%   (M+1)-by-M upper Hessenberg matrix H such that
-%   A*Q(:,1:M) = Q(:,1:M)*H(1:M,1:M) + H(M+1,M)*Q(:,M+1)*E_M',
-%   where E_M is the M'th column of the M-by-M identity matrix.
+%   (M+1)-by-M upper Hessenberg matrix H.
 
 n = length(A);
 if nargin < 3, m = n; end
