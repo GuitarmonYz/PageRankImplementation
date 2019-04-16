@@ -75,7 +75,7 @@ qrIter = 100;
 [H_prime, Q_prime] = practical_qr(H, qrIter);
 V = mtimes(Q,Q_prime);
 D = diag(H_prime);
-norm(V * D * V' - Ht)
+D
 p = V(:,1)/sum(V(:,1)); % normalised eigenvector as the PageRank vector
 [newp,rank] = sort(p,'descend'); % sort in descending ord
 
