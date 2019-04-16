@@ -70,7 +70,7 @@ Hcopy = H;
 %   Hcopy = Hcopy(1:n-1,1:n-1);
 % end
 
-for i=1:qrIter; 
+for i=1:qrIter
     [Qcopy,R] = qr(Hcopy);
     Hcopy=R*Qcopy; 
 end
