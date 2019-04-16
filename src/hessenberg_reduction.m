@@ -1,4 +1,11 @@
+% CSE6643 PAGE RANK PROJECT
+% Arthur: Xiyu Ouyang, Yan Zhao, Jiawei Zhu
+% College of Computing
+% Department of Computational Science and Engineering
+% Georgia Institute of Technology
+% 2019/4/16
 function [H, Q] = hessenberg_reduction(A)
+% convert a real matrix into a Hessenberg matrix
 [n, ~] = size(A);
 Q = eye(n);
 H = A;

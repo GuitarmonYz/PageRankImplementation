@@ -17,13 +17,9 @@ function [Acopy, Q_prime] = practical_qr(A, max_iter)
 Acopy = A;
 [m, ~] = size(A);
 Q_prime = eye(m);
-s = Acopy(m,m);
 for i=1:max_iter
-    [Q,R] = qr(Acopy - s*eye(m));
+    s = Acopy(m,m);
+    [Q,R] = givens_qr(Acopy - s*eye(m));
     Acopy = R * Q + s*eye(m);
     Q_prime = mtimes(Q_prime, Q);
-    
-%     if mod(i, 10) == 0
-%         norm(Acopy * Q - Q * diag(diag(Acopy)))
-%     end
 end

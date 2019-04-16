@@ -5,7 +5,7 @@
 % Georgia Institute of Technology
 % 2019/4/16
 
-clear all;
+clear;
 close all;
 clc;
 
@@ -16,7 +16,7 @@ J = [1 1 2 2 2 3 4];
 % % Create the Adjacency matrix/Connectivity matrix from I,J
 % H = full(sparse(I,J,1,4,4));
 rowNumber = 20;
-H = createSparse(rowNumber, 0.1);
+H = createSparse(rowNumber, 0.8);
 
 % Plot the directed graph
 % names = {'vertex1', 'vertex2', ...
@@ -63,19 +63,18 @@ Ht = H*diag(1./c);
 % Find the PageRank Vector 
 % Using Arnoldi Decomposition and QR Algorithm
 [m, n] = size(Ht);
-randomVector = rand(m,1);
-q1 = randomVector / norm(randomVector);
+% randomVector = rand(m,1);
+% q1 = randomVector / norm(randomVector);
 
 % Arnoldi Decomposition
 arnoldiIter = 100;
-[Q,H] = arnoldi(Ht,q1,arnoldiIter);
+[Q,H] = arnoldi(Ht,arnoldiIter);
 
 % QR Algorithm
 qrIter = 100;
 [H_prime, Q_prime] = practical_qr(H, qrIter);
 V = mtimes(Q,Q_prime);
 D = diag(H_prime);
-norm(V * D * V' - Ht)
 p = V(:,1)/sum(V(:,1)); % normalised eigenvector as the PageRank vector
 [newp,rank] = sort(p,'descend'); % sort in descending ord
 
