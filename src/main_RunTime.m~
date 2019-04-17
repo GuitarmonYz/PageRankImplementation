@@ -10,7 +10,7 @@
 %   randomly generated sparse matrix in terms of power method, QR
 %   iterations with shift, QR without Hessenberg, and arnoldi
 %   for a number (iter) of times
-iter = 5;
+iter = 1;
 
 %Create time arrays to store run time of each method
 tPower = zeros(1, iter);
@@ -18,76 +18,108 @@ tQRWH = zeros(1, iter);
 tQRS = zeros(1, iter);
 tArnoldi = zeros(1, iter);
 
-ttPower = zeros(1, 4);
-ttQRWH = zeros(1, 4);
-ttQRS = zeros(1, 4);
-ttArnoldi = zeros(1, 4);
+ttPower = zeros(1, 3);
+ttQRWH = zeros(1, 3);
+ttQRS = zeros(1, 3);
+ttArnoldi = zeros(1, 3);
 
 %initialize input parameters
-n = 100;
 p = 0.4;
 k = 30;
 num_iter = 30;
 
 %compute run time for each method for iter times
-
+iters = [10, 100, 500, 700, 1000];
 % runtime on dense matrix
-for j = 1:4
-    for i = 1:iter
-        A = rand(10^(j+1));
-        tic;
-        powerMethod(input, k);
-        tPower(i) = toc;
+% for j = 1:5
+%     for i = 1:iter
+%         A = rand(iters(j));
+%         tic;
+%         power_method(A, k);
+%         tPower(i) = toc;
+%         disp("power finished");
+%         tic;
+%         QR_iteration_with_shift(A, num_iter);
+%         tQRS(i) = toc;
+%         disp('QRS finished');
+%         tic;
+%         QR_without_hessenberg(A, num_iter);
+%         tQRWH(i) = toc;
+%         disp('QRWH finished');
+%         tic;
+%         arnoldi_with_qr(A, 100, num_iter);
+%         tArnoldi(i) = toc;
+%         disp('arnoldi finished');
+%     end
+%     ttPower(j) = mean(tPower);
+%     ttQRWH(j) = mean(tQRWH);
+%     ttQRS(j) = mean(tQRS);
+%     ttArnoldi(j) = mean(tArnoldi);
+% end
+% hold on
+% plot(iters, ttPower);
+% plot(iters, ttQRWH);
+% plot(iters, ttQRS);
+% plot(iters, ttArnoldi);
+% legend("Power Method","QR without Hessenberg", "QR with Shift", "Arnoldi");
+% xlabel("matrix size");
+% ylabel("Run Time (sec)");
+% hold off
 
-        tic;
-        QR_iteration_with_shift(input, num_iter);
-        tQRS(i) = toc;
+% for j = 1:5
+%     for i = 1:iter
+%         A = createSparse(iters(j), 0.4);
+%         tic;
+%         power_method(A, k);
+%         tPower(i) = toc;
+%         disp("power finished");
+%         tic;
+%         arnoldi_with_qr(A, 100, num_iter);
+%         tArnoldi(i) = toc;
+%         disp('arnoldi finished');
+%     end
+%     ttPower(j) = mean(tPower);
+%     ttArnoldi(j) = mean(tArnoldi);
+% end
+% figure;
+% hold on
+% plot(iters, ttPower);
+% plot(iters, ttArnoldi);
+% title('runtime for power and arnoldi on sparse matrix');
+% legend("Power Method", "Arnoldi with QRS");
+% xlabel("matrix size");
+% ylabel("Run Time (sec)");
 
-        tic;
-        QR_without_hessenberg(input, num_iter);
-        tQRWH(i) = toc;
-
-        tic
-        arnoldi(input, 100);
-        tArnoldi(i) = toc;
-    end
-
-    ttPower(j) = mean(tPower);
-    ttQRWH(j) = mean(tQRWH);
-    ttQRS(j) = mean(tQRS);
-    ttArnoldi(i) = mean(tArnoldi);
-end
-
-for i = 1:5
-    [input] = createSparse(n, p);
-    
-    tic;
-    powerMethod(input, k);
-    tPower(i) = toc;
-    
-    tic;
-    QR_iteration_with_shift(input, num_iter);
-    tQRS(i) = toc;
-    
-    tic;
-    QR_without_hessenberg(input, num_iter);
-    tQRWH(i) = toc;
-    
-    tic
-    arnoldi(input);
-    tArnoldi(i) = toc;
-end
-
-%plot run time
-figure(1);
-iters = linspace(1, iter, iter);
-plot(iters, tPower);
-xlabel("Number of Iterations");
-ylabel("Run Time (sec)");
-title("Run Time Comparison")
-hold on
-plot(iters, tArnoldi)
-plot(iters, tQRS);
-plot(iters, tQRWH);
-legend("Power Method", "Arnoldi", "QR with Shift", "QR without Hessenberg")
-hold off
+% for i = 1:5
+%     [input] = createSparse(n, p);
+%     
+%     tic;
+%     powerMethod(input, k);
+%     tPower(i) = toc;
+%     
+%     tic;
+%     QR_iteration_with_shift(input, num_iter);
+%     tQRS(i) = toc;
+%     
+%     tic;
+%     QR_without_hessenberg(input, num_iter);
+%     tQRWH(i) = toc;
+%     
+%     tic
+%     arnoldi(input);
+%     tArnoldi(i) = toc;
+% end
+% 
+% %plot run time
+% figure(1);
+% iters = linspace(1, iter, iter);
+% plot(iters, tPower);
+% xlabel("Number of Iterations");
+% ylabel("Run Time (sec)");
+% title("Run Time Comparison")
+% hold on
+% plot(iters, tArnoldi)
+% plot(iters, tQRS);
+% plot(iters, tQRWH);
+% legend("Power Method", "Arnoldi", "QR with Shift", "QR without Hessenberg")
+% hold off
