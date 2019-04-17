@@ -9,7 +9,6 @@ function [eig_val, eig_vec, converge_indicator] = QR_iteration_with_shift(A, num
 [n, ~] = size(A);
 eig_vec = eye(n);
 [H, Q_h] = hessenberg_reduction(A);
-norm(Q_h * H - A * Q_h);
 converge_indicator = zeros(num_iter, 1);
 for i = 1:num_iter
     mue = H(n, n);
